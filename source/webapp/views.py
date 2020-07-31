@@ -3,28 +3,18 @@ from django.http import HttpResponseNotAllowed
 from django.utils.timezone import make_naive
 
 from webapp.models import Product
-from webapp.forms import ProductForm, BROWSER_DATETIME_FORMAT
+from webapp.forms import ProductForm
 
 
 def index_view(request):
-    is_admin = request.GET.get('is_admin', None)
-    if is_admin:
-        data = Product.objects.all()
-    else:
-        data = Product.objects.filter(category='other')
+    data = Product.objects.order_by('category', 'name')
     return render(request, 'index.html', context={
         'products': data
     })
 
 
 def product_view(request, pk):
-    # try:
-    #     product = Product.objects.get(pk=pk)
-    # except Product.DoesNotExist:
-    #     raise Http404
-
     product = get_object_or_404(Product, pk=pk)
-
     context = {'product': product}
     return render(request, 'product_view.html', context)
 
@@ -39,11 +29,11 @@ def product_create_view(request):
         if form.is_valid():
             # product = Product.objects.create(**form.cleaned_data)
             product = Product.objects.create(
-                title=form.cleaned_data['title'],
-                text=form.cleaned_data['text'],
-                author=form.cleaned_data['author'],
-                status=form.cleaned_data['status'],
-                publish_at=form.cleaned_data['publish_at']
+                name=form.cleaned_data['name'],
+                description=form.cleaned_data['description'],
+                category=form.cleaned_data['category'],
+                amount=form.cleaned_data['amount'],
+                price=form.cleaned_data['price']
             )
             return redirect('product_view', pk=product.pk)
         else:

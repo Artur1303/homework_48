@@ -1,0 +1,12 @@
+
+<form action=" {{ action_url }} " method="post">
+{% csrf_token %}
+    {% for field in form %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        <p>{{ field }}</p>
+        {% for error in field.errors %}
+            <p class="form-error">{{ error }}</p>
+        {% endfor %}
+    {% endfor %}
+    <input type="submit" value="{{ button_text }}">
+</form>
