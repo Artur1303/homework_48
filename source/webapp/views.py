@@ -48,15 +48,11 @@ def product_update_view(request, pk):
     product = get_object_or_404(Product, pk=pk)
     if request.method == "GET":
         form = ProductForm(initial={
-            'title': product.title,
-            'text': product.text,
-            'author': product.author,
-            'status': product.status,
-            # форматирование перед выводом для DateTime.
-            'publish_at': make_naive(product.publish_at)\
-                .strftime(BROWSER_DATETIME_FORMAT)
-            # для дат выглядит просто как:
-            # 'publish_at': product.publish_at
+            'name': product.name,
+            'description': product.description,
+            'category': product.category,
+            'amount': product.amount,
+            'price': product.price,
         })
         return render(request, 'product_update.html', context={
             'form': form,
@@ -66,11 +62,11 @@ def product_update_view(request, pk):
         form = ProductForm(data=request.POST)
         if form.is_valid():
             # product.objects.filter(pk=pk).update(**form.cleaned_data)
-            product.title = form.cleaned_data['title']
-            product.text = form.cleaned_data['text']
-            product.author = form.cleaned_data['author']
-            product.status = form.cleaned_data['status']
-            product.publish_at = form.cleaned_data['publish_at']
+            product.name = form.cleaned_data['name']
+            product.description = form.cleaned_data['description']
+            product.category = form.cleaned_data['category']
+            product.amount = form.cleaned_data['amount']
+            product.price = form.cleaned_data['price']
             product.save()
             return redirect('product_view', pk=product.pk)
         else:
