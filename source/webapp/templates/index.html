@@ -8,5 +8,6 @@
         <p>{{ product.price }}</p>
         <p>{{ product.get_category_display }}</p>
         <a href="{% url 'product_update' product.pk %} ">Update</a>
+        <a href="{% url 'product_delete' product.pk %} ">Delete</a>
     {% endfor %}
 {% endblock %}
