@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator
+from django.db.models import Sum
 
 DEFAULT_CATEGORY = 'other'
 CATEGORY_CHOICES = (
@@ -25,3 +26,12 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+
+
+class Basket(models.Model):
+    products = models.ForeignKey('webapp.Product', related_name='baskets',on_delete=models.DO_NOTHING, verbose_name='Карзина')
+    qty = models.IntegerField(verbose_name='Количество', validators=[MinValueValidator(0)])
+
+    def total(self):
+        return self.products.price * self.qty
+

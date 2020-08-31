@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}
+   Basket
+{% endblock %}
+{% block content %}
+       <table border="1" width="100%" cellpadding="5">
+       <tr>
+        <th>Название</th>
+        <th>Цена</th>
+           <th>Количество</th>
+            <th>Сумма</th>
+       </tr>
+
+    {% for basket in basket_list %}
+        
+       <tr>
+        <td>{{ basket.products.name  }} </td>
+        <td>{{ basket.products.price }}</td>
+           <td>{{ basket.qty }}</td>
+        <td>{{ basket.total }}</td>
+       <td><a href="{% url 'basket_delete' basket.pk %}">Delete</a></td>
+      </tr>
+
+
+    {% endfor %}
+
+</table>
+    <p> Итого: {{ summ }} </p>
+{% endblock %}

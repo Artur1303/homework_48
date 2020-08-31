@@ -2,12 +2,24 @@
 {% block title %}
     My Products
 {% endblock %}
+{% block search %}
+{% include 'partial/simple_search.html' %}
+{% endblock %}
+
 {% block content %}
+ {% if is_paginated %}
+   {% include 'partial/pagination.html' %}
+{% endif %}
     {% for product in products %}
         <h1><a href=" {% url 'product_view' product.pk %} ">{{ product.name }}</a></h1>
         <p>{{ product.price }}</p>
         <p>{{ product.get_category_display }}</p>
         <a href="{% url 'product_update' product.pk %} ">Update</a>
+
         <a href="{% url 'product_delete' product.pk %} ">Delete</a>
+        <a href="{% url 'add_to_basket' product.pk %} ">Add Basket</a>
     {% endfor %}
+    {% if is_paginated %}
+   {% include 'partial/pagination.html' %}
+{% endif %}
 {% endblock %}

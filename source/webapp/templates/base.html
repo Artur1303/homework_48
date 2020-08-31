@@ -17,9 +17,13 @@
        <ul class="menu">
            <li><a href=" {% url 'index' %} ">Home</a></li>
            <li><a href=" {% url 'product_create' %} ">Create</a></li>
+           <li><a href=" {% url 'basket_view' %} ">Basket</a></li>
 
            {% block menu %}{% endblock %}
        </ul>
+    {% block search %}
+
+            {% endblock %}
    </div>
 </nav>
 <div class="container">
