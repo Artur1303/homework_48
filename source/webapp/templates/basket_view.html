@@ -27,4 +27,8 @@
 
 </table>
     <p> Итого: {{ summ }} </p>
+    <hr>
+
+        {% url 'order_create' as action_url %}
+        {% include 'partial/product_forms.html' with action_url=action_url button_text='Add Ordwe' %}
 {% endblock %}

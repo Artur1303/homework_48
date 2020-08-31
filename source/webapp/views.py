@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseNotAllowed
 from django.urls import reverse, reverse_lazy
 from django.views.generic import DetailView, CreateView, UpdateView, DeleteView,View, ListView
-from webapp.models import Product, Basket
-from webapp.forms import ProductForm
+from webapp.models import Product, Basket, Orders, ProductOrder
+from webapp.forms import ProductForm, OrederForm
 from .base_views import SearchView
 from django.db import models
 from django.db.models import Q, ExpressionWrapper, F, Sum
@@ -75,6 +75,8 @@ class BasketView(ListView):
         context['summ'] = 0
         for baket in Basket.objects.all():
             context['summ'] += baket.total()
+        context['form'] = OrederForm()
+
         return context
 
 
@@ -85,3 +87,20 @@ class BasketDelete(DeleteView):
     def get(self, request, *args, **kwargs):
         return self.delete(request, *args, **kwargs)
 
+
+class OrderCreate(View):
+    def post(self, request, *args, **kwargs):
+        form = OrederForm(data=request.POST)
+        if form.is_valid():
+            order = Orders.objects.create(**form.cleaned_data)
+            for basket in Basket.objects.all():
+                ProductOrder.objects.create(order=order, product=basket.products, qty=basket.qty)
+                product = Product.objects.get(pk=basket.products.pk)
+                product.amount -= basket.qty
+            Basket.objects.all().delete()
+            return redirect('index')
+
+        else:
+            basket = Basket.objects.all()
+            context = {'basket_list': basket, 'form': form }
+            return render(request, 'basket_view.html', context)
